@@ -12,6 +12,9 @@ import ssl
 import requests
 import os 
 from langdetect import detect
+import sys
+
+
 
 
 
@@ -66,9 +69,9 @@ def main_process():
     
     while True:
         request=command().lower()
-        if "AmCa" in request:
+        if "hello" in request:
             speak("Yes sir,AmCa is listening")
-            request=request.replace("AmCa","").strip()
+            request=request.replace("hello","").strip()
         elif "play" in request and "on youtube" in request:
              song_name=request.replace("play","").replace("on youtube","").strip()
              if song_name:
@@ -193,41 +196,55 @@ def main_process():
         # main code start here ai role hindi voice ,image generation,ask question 
         #ai se chat ke liye code tha 
         elif "ask ai" in request or "poochho ai se " in request:
-            speak("kya poochhna hai AI se?")
+            speak("what do you want to ask the AI ?")
             question=command()
             API_URL="https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
-            headers={"Authorization":f"Bearer{HUGGINGFACE_API_TOKEN}"}
+            headers={"Authorization":f"Bearer {HUGGINGFACE_API_TOKEN}"}
             payload={
-                "input":f"<|system|>Tu ek helpful Hindi assistant hai<|user|>{question}<|assistant|>",
+                "inputs":f"<|system|>Tu ek helpful Hindi assistant hai<|user|>{question}<|assistant|>",
                 "parameters":{"max_new_tokens":400}
             }
             response=requests.post(API_URL,headers=headers,json=payload)
             result=response.json()
             try:
-                reply=result[0]["generated_text"].split("<|assistant|>")[-1].strip()
-            except:
-                reply="kuch galat ho gya AI se baat karte time." 
-                print(reply)   
+                result=response.json()
+                if isinstance(result,dict) and "error" in result:
+                    raise Exception(result["error"])
+
+                reply=result[0]["generated_text"]
+                reply=reply.split("<|assistant|>")[-1].strip()
+                print("AI REPLY",reply)
+                speak(reply)
+            except Exception as e:
+                print("error occurred",e)
+                reply="something went wrong while talking to the AI" 
                 speak(reply)
         # image generation ke liye code hai ab         
 
         elif "generate image" in request or "image bana de" in request:
-            speak("kis cheez ki image chahiye?")
+            speak("what kind of image do you want?")
             image_prompt=command()
             API_URL= "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4"
             headers = { "Authorization": f"Bearer {HUGGINGFACE_API_TOKEN}",
-                       "Accept": "application/json"}
+                       }
             payload = {"inputs": image_prompt}
             speak("Thoda ruk ja bhai, image ban rahi hai...")
             response=requests.post(API_URL,headers=headers,json=payload)
             if response.status_code==200:
-                with open("output_image.png","wb") as f:
-                    f.write(response.content)
-                speak("image bana di bhai, dekh le: output_image.png")
-                os.startfile("output_image.png")
-            else:
-                speak("image generate nahi ho payi.")        
-        elif "exit" in request or "band ho ja" in request:
+                    try:  
+                    
+                        with open("output_image.png","wb") as f:
+                            f.write(response.content)
+                        speak("image has been generated.check this out: output_image.png")
+                        os.startfile("output_image.png")
+                    except Exception as e:
+                            speak(f"there was an issue while saving the image:{str(e)}")
+
+            else :
+                print("status code:",response.status_code)
+                print("response text:",response.text)
+                speak("image generate nahi ho payi, server ne error diya.")                        
+        elif "close" in request or "band ho ja" in request:
             speak("okay sir,shutting down have a nice day sir !")
-            break
+            sys.exit()
 main_process()
