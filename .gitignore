@@ -1,0 +1,9 @@
+_pycache_/
+envamca/
+config.json
+contact.json
+email.json
+huggingface.json
+output_image.png
+todo.txt
+pywhatkit_DB.txt
