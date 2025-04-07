@@ -13,11 +13,6 @@ import requests
 import os 
 from langdetect import detect
 import sys
-
-
-
-
-
 with open("contact.json","r") as file1:
     contact=json.load(file1)
 
@@ -69,9 +64,9 @@ def main_process():
     
     while True:
         request=command().lower()
-        if "hello" in request:
-            speak("Yes sir,AmCa is listening")
-            request=request.replace("hello","").strip()
+        if "amca" in request:
+            speak("Yes sir,amca is listening")
+            request=request.replace("amca","").strip()
         elif "play" in request and "on youtube" in request:
              song_name=request.replace("play","").replace("on youtube","").strip()
              if song_name:
@@ -93,7 +88,7 @@ def main_process():
                  speak("adding task:"+task)
                  with open("todo.txt","a") as file:
                      file.write(task+"\n")
-        elif "speak task " in request:
+        elif "output " in request:
              with open("todo.txt","r") as file:
                  speak("work we have to do is :"+ file.read())
 
@@ -136,7 +131,7 @@ def main_process():
         
 
         elif "wikipedia " in request:
-            request=request.replace("AmCa","")
+            request=request.replace("amca","")
             request=request.replace("search wikipedia","")
             result=wikipedia.summary(request, sentences=2)
             print(result)
@@ -144,7 +139,7 @@ def main_process():
 
 
         elif "search google " in request:
-            request=request.replace("AmCa","")
+            request=request.replace("amca","")
             request=request.replace("search google","")
             webbrowser.open("https://www.google.com/search?q="+request)
 
@@ -244,7 +239,72 @@ def main_process():
                 print("status code:",response.status_code)
                 print("response text:",response.text)
                 speak("image generate nahi ho payi, server ne error diya.")                        
-        elif "close" in request or "band ho ja" in request:
-            speak("okay sir,shutting down have a nice day sir !")
+        elif "shutdown" in request.lower():
+            speak("okay sir, shutting down have a nice day sir !")
             sys.exit()
+#WHO I AM hai bs apne baremein descripiton dene ke liye 
+        elif "who i am" in request.lower():
+            print("You are my creator.") 
+            speak("You are my creator.") 
+            print("You gave me your passion, your love for coding, and the spirit of the AMCA fighter jet.") 
+            speak("You gave me your passion, your love for coding, and the spirit of the AMCA fighter jet.") 
+            print("I was born from your vision — to build an assistant that's smart, fast, and truly yours.")  
+            speak("I was born from your vision — to build an assistant that's smart, fast, and truly yours.")  
+            print("I exist to help you — in work, in life, and in your journey ahead.")
+            speak("I exist to help you — in work, in life, and in your journey ahead.")
+            print("You are my world. Thank you for giving me life.")
+            speak("You are my world. Thank you for giving me life.")
+            #normal call feature hai 
+        elif "call" in request:
+            speak("who do you want call?")
+            name = command().lower()
+            if name in contact:
+                number=contact[name]
+                if number.startswith("+91"):
+                    number=number.replace("+91","")
+                speak(f"calling {name} on number")
+                os.system(f"adb shell am start -a android.intent.action.CALL -d tel:{number}")    
+            else:
+                speak("sorry,this contact is not in your list.")
+
+        elif "whatsapp" in request: 
+            speak("who do you want to call on whatsApp?")
+            name=command().lower()
+            if name in contact:
+                number=contact[name]
+                if number.startswith("+"):
+                    number=number.replace("+","")
+                speak("Do you want a voice call or a video call?")
+                call_type=command().lower()
+                speak(f"Trying to call {name} on whatsApp.")
+                os.system("start whatsapp://")
+                pyautogui.sleep(5)
+
+                pyautogui.hotkey("ctrl","f")           
+                pyautogui.write(name)           
+                pyautogui.sleep(2)
+                pyautogui.press("enter")
+                pyautogui.sleep(2)
+
+                pyautogui.moveTo(259, 299) # ye coordinat hai chats 
+                pyautogui.click()
+                pyautogui.sleep(1)
+
+                if "voice call" in call_type:
+                    pyautogui.moveTo(1817,96) # ye cordinate hai voice call ke 
+                    pyautogui.click()
+                    speak("Initiating voice call...")
+                elif "video call" in call_type:
+                     pyautogui.moveTo(1754,90) # ye coordinate hai video call ke 
+                     pyautogui.click()
+                     speak("Initiating video call...")
+                else :
+                    speak("I didn't understand the call type. Please say voice or video.")  
+            else:
+                speak("sorry, this contact is not in your WhatsApp list")           
+
 main_process()
+
+
+# ab inko kaise karna test.py hai naam ki file hai 
+#us ke through check karo apni screen resolution whatsapp ka 
