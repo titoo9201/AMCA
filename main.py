@@ -286,7 +286,7 @@ def main_process():
                 pyautogui.press("enter")
                 pyautogui.sleep(2)
 
-                pyautogui.moveTo(259, 299) # ye coordinat hai chats 
+                pyautogui.moveTo(299, 220) # ye coordinat hai chats 
                 pyautogui.click()
                 pyautogui.sleep(1)
 

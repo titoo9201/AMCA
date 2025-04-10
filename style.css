@@ -1,0 +1,92 @@
+/* General Styles */
+body {
+    background-color: black;
+    color: white;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  #sidebar {
+    height: 100vh;
+    padding-top: 20px;
+  }
+  
+  #main {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  /* Chat Area */
+  #chat-area {
+    background-color: #121212;
+    border: 2px solid #1f1f1f;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 80vh; /* Adjusted height */
+  }
+  
+  #messages {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+  }
+  
+  /* User Message Style */
+  .user-message {
+    background-color: lightcyan;
+    color: black;
+    border: 2px solid darkcyan;
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 60%;
+    align-self: flex-end;
+    word-wrap: break-word;
+  }
+  
+  /* Reply Message Style */
+  .reply-message {
+    background-color: lightcoral;
+    color: black;
+    border: 2px solid darkorange;
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 60%;
+    align-self: flex-start;
+    word-wrap: break-word;
+  }
+  
+  /* Input Section */
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  #user-input {
+    border: 1px solid #555;
+    background-color: #222;
+    color: white;
+  }
+  
+  #user-input::placeholder {
+    color: #888;
+  }
+  
+  #send-btn, #mic-btn, #camera-btn {
+    color: white;
+  }
+  
+  #send-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  #mic-btn:hover, #camera-btn:hover {
+    background-color: #444;
+  }
+  
