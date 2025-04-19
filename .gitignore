@@ -4,6 +4,10 @@ config.json
 contact.json
 email.json
 huggingface.json
-output_image.png
-todo.txt
+
+
 pywhatkit_DB.txt
+gemni.json
+openai.json
+groq.json
+DEEPSEEK.json 

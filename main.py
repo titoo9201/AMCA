@@ -13,15 +13,36 @@ import requests
 import os 
 from langdetect import detect
 import sys
+
+
+
+
+
 with open("contact.json","r") as file1:
     contact=json.load(file1)
 
 with open("email.json","r") as file2:
     email=json.load(file2) 
+# with open('gemni.json') as f:
+#     config = json.load(f)
+# api_key = config.get("api_key")
+# if not api_key:
+#     raise ValueError("API key is missing from gemni.json")
+# palm.configure(api_key=api_key)
 
 with open("huggingface.json","r") as hf_file:
     hf_data=json.load(hf_file)
-HUGGINGFACE_API_TOKEN = hf_data["hf_token"]    
+HUGGINGFACE_API_TOKEN = hf_data["hf_token"]     
+
+# with open("groq.json", "r") as groq_file:
+#     groq_data = json.load(groq_file)
+
+# GROQ_API_TOKEN = groq_data["GROQ_API_TOKEN"]
+with open("deepseek.json", "r") as ds_file:
+    ds_data = json.load(ds_file)
+DEEPSEEK_API_KEY = ds_data["deepseek_key"]    
+
+
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices') 
@@ -190,55 +211,78 @@ def main_process():
                   speak("I couldn't find that contact.")          
         # main code start here ai role hindi voice ,image generation,ask question 
         #ai se chat ke liye code tha 
-        elif "ask ai" in request or "poochho ai se " in request:
+        elif "ask ai" in request:
             speak("what do you want to ask the AI ?")
             question=command()
-            API_URL="https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
-            headers={"Authorization":f"Bearer {HUGGINGFACE_API_TOKEN}"}
-            payload={
-                "inputs":f"<|system|>Tu ek helpful Hindi assistant hai<|user|>{question}<|assistant|>",
-                "parameters":{"max_new_tokens":400}
+            API_URL = "https://openrouter.ai/api/v1/chat/completions"
+            headers = {
+                 "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+                  "Content-Type": "application/json"
+            } 
+            payload = {
+                "model": "deepseek/deepseek-r1:free",
+                "messages": [
+                 {"role": "user", "content": question}
+               ],
+                "parameters": {
+                "max_tokens": 400
+                 }
             }
-            response=requests.post(API_URL,headers=headers,json=payload)
-            result=response.json()
             try:
-                result=response.json()
-                if isinstance(result,dict) and "error" in result:
-                    raise Exception(result["error"])
-
-                reply=result[0]["generated_text"]
-                reply=reply.split("<|assistant|>")[-1].strip()
-                print("AI REPLY",reply)
-                speak(reply)
-            except Exception as e:
-                print("error occurred",e)
-                reply="something went wrong while talking to the AI" 
-                speak(reply)
+                 response = requests.post(API_URL, headers=headers, json=payload)
+                 response_data = response.json()
+                 if response.status_code != 200:
+                  raise Exception(response_data.get("error", "Unknown error occurred"))  
+                 reply = response_data["choices"][0]["message"]["content"]
+                 print("AI REPLY:", reply) 
+                 speak(reply)
+            except Exception as e: 
+                print("Error occurred:", e)
+                reply = "Something went wrong while talking to the AI." 
+                speak(reply)   
         # image generation ke liye code hai ab         
-
+        
         elif "generate image" in request or "image bana de" in request:
-            speak("what kind of image do you want?")
-            image_prompt=command()
-            API_URL= "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4"
-            headers = { "Authorization": f"Bearer {HUGGINGFACE_API_TOKEN}",
-                       }
-            payload = {"inputs": image_prompt}
-            speak("Thoda ruk ja bhai, image ban rahi hai...")
-            response=requests.post(API_URL,headers=headers,json=payload)
-            if response.status_code==200:
-                    try:  
-                    
-                        with open("output_image.png","wb") as f:
-                            f.write(response.content)
-                        speak("image has been generated.check this out: output_image.png")
-                        os.startfile("output_image.png")
-                    except Exception as e:
-                            speak(f"there was an issue while saving the image:{str(e)}")
+            speak("What kind of image do you want?")
+            image_prompt = command()
 
-            else :
-                print("status code:",response.status_code)
-                print("response text:",response.text)
-                speak("image generate nahi ho payi, server ne error diya.")                        
+         
+            API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3-medium-diffusers"
+            headers = {
+                "Authorization": f"Bearer {HUGGINGFACE_API_TOKEN}"
+            }
+            payload = {"inputs": image_prompt}
+
+            
+            speak("Please wait, I am generating the image...")
+            
+            try:
+               
+                response = requests.post(API_URL, headers=headers, json=payload)
+
+                if response.status_code == 200:
+                    try:
+                    
+                        with open("output_image.png", "wb") as f:
+                            f.write(response.content)
+                        speak("Image has been generated. Here it is: output_image.png")
+                        os.startfile("output_image.png")  
+                    except Exception as e:
+                        speak(f"There was an issue while saving the image: {str(e)}")
+                else:
+                    
+                    error_message = response.text
+                    print("Status Code:", response.status_code)
+                    print("Response Text:", error_message)
+                    speak(f"Image could not be generated. Server returned an error: {error_message}")
+
+            except requests.exceptions.RequestException as e:
+             
+                print("Request Exception:", e)
+                speak("There was an issue connecting to the server. Please try again later.")
+
+              
+               #shut down code                       
         elif "shutdown" in request.lower():
             speak("okay sir, shutting down have a nice day sir !")
             sys.exit()

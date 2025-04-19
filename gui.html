@@ -14,10 +14,12 @@
     <div class="row">
       <!-- Sidebar -->
       <div class="col-2 bg-dark text-white d-flex flex-column align-items-center" id="sidebar">
-        <h3 class="my-3">Menu</h3>
-        <button class="btn btn-light w-100 my-2">Login</button>
-        <button class="btn btn-light w-100 my-2">Signup</button>
-        <button class="btn btn-light w-100 my-2">Contacts</button>
+        <button id="toggle-btn" class="btn btn-dark my-3">
+          <i class="bi bi-sliders2"></i>
+        </button>
+        <button class="btn btn-light w-100 my-2">Login / Signup</button>
+        <button class="btn btn-light w-100 my-2">History</button>
+        <button class="btn btn-light w-100 my-2">contacts</button>
         <button class="btn btn-light w-100 my-2">Settings</button>
       </div>
 
@@ -38,8 +40,9 @@
             <button id="mic-btn" class="btn btn-secondary">
               <i class="bi bi-mic"></i>
             </button>
+            <input type="text" id="image-prompt" class="form-control" placeholder="Describe the image (eg: A FLYING CAR)">
             <button id="camera-btn" class="btn btn-secondary">
-              <i class="bi bi-camera2"></i>
+              <i class="bi bi-camera"></i>
             </button>
           </div>
         </div>

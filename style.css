@@ -1,31 +1,39 @@
 /* General Styles */
 body {
-    background-color: black;
+    background-color: grey;
     color: white;
     margin: 0;
     font-family: Arial, sans-serif;
   }
   
   #sidebar {
-    height: 100vh;
-    padding-top: 20px;
+  width: 250px;
+  height: 100vh;
+  background-color: white; 
+  color: black;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: block;
+  transition: all 0.3s ease;
+  }
+  #sidebar[style*="display: none"]{
+    width: 0;
+    visibility: hidden;
   }
   
   #main {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
   }
+  
   
   /* Chat Area */
   #chat-area {
-    background-color: #121212;
+    background-color: grey;
     border: 2px solid #1f1f1f;
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
     height: 80vh; /* Adjusted height */
   }
   
@@ -69,24 +77,40 @@ body {
   }
   
   #user-input {
+    border: 1px solid #555555;
+    background-color: #222;
+    color: white;
+  }
+
+  #image-prompt{
     border: 1px solid #555;
     background-color: #222;
     color: white;
   }
   
-  #user-input::placeholder {
-    color: #888;
+  #user-input::placeholder , #image-prompt::placeholder {
+    color: lightcyan;
   }
   
-  #send-btn, #mic-btn, #camera-btn {
-    color: white;
-  }
   
-  #send-btn:hover {
-    background-color: #0056b3;
-  }
   
+  
+   #mic-btn, #camera-btn {
+    color: black;
+    background-color: lightblue;
+    
+  }
+  #send-btn:hover{
+    background-color: greenyellow;
+  }
+
   #mic-btn:hover, #camera-btn:hover {
-    background-color: #444;
+    background-color:rgba(27, 70, 213, 0.786) 
+  }
+
+  #send-btn{
+    color: black;
+    background-color: lightgreen
+    
   }
   
