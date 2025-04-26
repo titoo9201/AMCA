@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const main = document.getElementById("main");
     const cameraBtn = document.getElementById('camera-btn');
     const imagePromptInput = document.getElementById('image-prompt');
+    const micbtn=document.getElementById('mic-btn');
   
     // yha user ka message hai
     function addUserMessage(message) {
@@ -89,6 +90,9 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('Failed to generate image: ' + error.message);
         });
 });
+
+
+ 
 
   });
   

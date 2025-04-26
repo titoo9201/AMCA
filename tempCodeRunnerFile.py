@@ -1,0 +1,1 @@
+Rainy night in a busy city with wet streets reflecting neon lights, high-rise buildings, glowing windows, and moody stormy clouds in the sky. East Asian signs and moving cars add urban vibrancy

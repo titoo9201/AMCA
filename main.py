@@ -60,27 +60,34 @@ def speak(audio):
      
      engine.say(audio)
      engine.runAndWait()
-
+def listen():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.adjust_for_ambient_noise(source)
+        audio = r.listen(source)
+    try:
+        print("Recognizing...")
+        query = r.recognize_google(audio, language='en')
+        print(f"User said: {query}")
+        return query.lower()
+    except Exception as e:
+        print("Sorry, I did not understand that.")
+        speak("Sorry, I did not understand that.")
+        return None     
 def command():
-    content=" "
-    while content==" ":
-        # yha se microphone se voice input hogei 
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            print("Say something!")
-            audio = r.listen(source)
-        try:
-            content=r.recognize_google(audio,language='en-in')
-            print("you said (ENGLISH):" + content )
-            
-        except:
-            try:
-                content=r.recognize_google(audio,language="hi-IN")
-                print("you said (hindi):" + content)
-            except:
-                print("please try again...")    
+    content = None
+    while not content:
+        content=listen()
+        if content is None:
+            print("please try again")
+        else:
 
-    return content
+            content = content.strip().lower() # Adcded .lower() for consistency
+            if not content:
+              print("Please say command .")
+    return content    
+
 def main_process():
     
     while True:
@@ -165,16 +172,19 @@ def main_process():
             webbrowser.open("https://www.google.com/search?q="+request)
 
         elif "send whatsapp" in request:
+            print("Whom do you want to message?")
             speak("Whom do you want to message?")
             name = command().lower()
 
             if name in contact:
                 number = contact[name]
+                print(f"What is the message for {name}?")
                 speak(f"What is the message for {name}?")
                 message = command()
                 now = datetime.datetime.now()
                 hour = now.hour
                 minute = now.minute + 2  # to avoid time error
+                print(f"Sending your message to {name}. Please wait.")
                 speak(f"Sending your message to {name}. Please wait.")
                 pywhatkit.sendwhatmsg(number, message, hour, minute)
                 
@@ -184,12 +194,15 @@ def main_process():
 
 
         elif "send email" in request:
+             print("Whom do you want to send an email?")
              speak("Whom do you want to send an email?")
              name = command().lower()
              if name in email:
                   to_email = email[name]
+                  print("What is the subject?")
                   speak("What is the subject?")
                   subject = command()
+                  print("What is the message?")
                   speak("What is the message?")
                   message = command()
                   try:
@@ -212,6 +225,7 @@ def main_process():
         # main code start here ai role hindi voice ,image generation,ask question 
         #ai se chat ke liye code tha 
         elif "ask ai" in request:
+            print("what do you want to ask the AI ?")
             speak("what do you want to ask the AI ?")
             question=command()
             API_URL = "https://openrouter.ai/api/v1/chat/completions"
@@ -243,6 +257,7 @@ def main_process():
         # image generation ke liye code hai ab         
         
         elif "generate image" in request or "image bana de" in request:
+            print("What kind of image do you want?")
             speak("What kind of image do you want?")
             image_prompt = command()
 
@@ -300,6 +315,7 @@ def main_process():
             speak("You are my world. Thank you for giving me life.")
             #normal call feature hai 
         elif "call" in request:
+            print("who do you want call?")
             speak("who do you want call?")
             name = command().lower()
             if name in contact:
@@ -312,14 +328,18 @@ def main_process():
                 speak("sorry,this contact is not in your list.")
 
         elif "whatsapp" in request: 
+            
+            print("who do you want to call on whatsApp?")
             speak("who do you want to call on whatsApp?")
             name=command().lower()
             if name in contact:
                 number=contact[name]
                 if number.startswith("+"):
                     number=number.replace("+","")
+                print("Do you want a voice call or a video call?")
                 speak("Do you want a voice call or a video call?")
                 call_type=command().lower()
+                print(f"Trying to call {name} on whatsApp.")
                 speak(f"Trying to call {name} on whatsApp.")
                 os.system("start whatsapp://")
                 pyautogui.sleep(5)
@@ -337,10 +357,12 @@ def main_process():
                 if "voice call" in call_type:
                     pyautogui.moveTo(1817,96) # ye cordinate hai voice call ke 
                     pyautogui.click()
+                    print("Initiating voice call...")
                     speak("Initiating voice call...")
                 elif "video call" in call_type:
                      pyautogui.moveTo(1754,90) # ye coordinate hai video call ke 
                      pyautogui.click()
+                     print("Initiating video call...")
                      speak("Initiating video call...")
                 else :
                     speak("I didn't understand the call type. Please say voice or video.")  
@@ -352,3 +374,6 @@ main_process()
 
 # ab inko kaise karna test.py hai naam ki file hai 
 #us ke through check karo apni screen resolution whatsapp ka 
+
+
+#Rainy night in a busy city with wet streets reflecting neon lights, high-rise buildings, glowing windows, and moody stormy clouds in the sky. East Asian signs and moving cars add urban vibrancy.
