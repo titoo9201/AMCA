@@ -13,11 +13,6 @@ import requests
 import os 
 from langdetect import detect
 import sys
-
-
-
-
-
 with open("contact.json","r") as file1:
     contact=json.load(file1)
 
@@ -63,7 +58,7 @@ def speak(audio):
 def listen():
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Listening...")
+        print("say something...")
         r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
     try:
@@ -103,24 +98,24 @@ def main_process():
              else:
                 speak("please say the song name before saying on YouTube.") 
 
-        elif "say time" in request:
+        elif "say time" in request.lower():
              now_time = datetime.datetime.now().strftime("%H:%M")
              speak("Current time is " + str(now_time))    
-        elif "say date" in request:
+        elif "say date" in request.lower():
               now_date = datetime.datetime.now().strftime("%d-%m")
               speak("Current date is " + str(now_date))
-        elif "new task" in request:
+        elif "new task" in request.lower():
               task=request.replace("new task","")
               task=task.strip()
               if task!="":
                  speak("adding task:"+task)
                  with open("todo.txt","a") as file:
                      file.write(task+"\n")
-        elif "output " in request:
+        elif "output " in request.lower():
              with open("todo.txt","r") as file:
                  speak("work we have to do is :"+ file.read())
 
-        elif "show work" in request:
+        elif "show work" in request.lower():
             with open("todo.txt","r") as file:
                  tasks= file.read()
 
@@ -150,7 +145,7 @@ def main_process():
 
 
 # open local app 
-        elif "open " in request:
+        elif "open " in request.lower():
             query=request.replace("open","")
             pyautogui.press("super")
             pyautogui.typewrite(query)
@@ -158,7 +153,7 @@ def main_process():
             pyautogui.press("enter")
         
 
-        elif "wikipedia " in request:
+        elif "wikipedia " in request.lower():
             request=request.replace("amca","")
             request=request.replace("search wikipedia","")
             result=wikipedia.summary(request, sentences=2)
@@ -166,12 +161,12 @@ def main_process():
             speak(result)
 
 
-        elif "search google " in request:
+        elif "search google " in request.lower():
             request=request.replace("amca","")
             request=request.replace("search google","")
             webbrowser.open("https://www.google.com/search?q="+request)
 
-        elif "send whatsapp" in request:
+        elif "send whatsapp" in request.lower():
             print("Whom do you want to message?")
             speak("Whom do you want to message?")
             name = command().lower()
@@ -193,7 +188,7 @@ def main_process():
                 speak("Sorry, this contact is not in your list.")    
 
 
-        elif "send email" in request:
+        elif "send email" in request.lower():
              print("Whom do you want to send an email?")
              speak("Whom do you want to send an email?")
              name = command().lower()
@@ -224,7 +219,7 @@ def main_process():
                   speak("I couldn't find that contact.")          
         # main code start here ai role hindi voice ,image generation,ask question 
         #ai se chat ke liye code tha 
-        elif "ask ai" in request:
+        elif "ask ai" in request.lower():
             print("what do you want to ask the AI ?")
             speak("what do you want to ask the AI ?")
             question=command()
@@ -256,7 +251,7 @@ def main_process():
                 speak(reply)   
         # image generation ke liye code hai ab         
         
-        elif "generate image" in request or "image bana de" in request:
+        elif "image" in request or "image bana de" in request:
             print("What kind of image do you want?")
             speak("What kind of image do you want?")
             image_prompt = command()
@@ -314,7 +309,7 @@ def main_process():
             print("You are my world. Thank you for giving me life.")
             speak("You are my world. Thank you for giving me life.")
             #normal call feature hai 
-        elif "call" in request:
+        elif "calling" in request.lower():
             print("who do you want call?")
             speak("who do you want call?")
             name = command().lower()
@@ -327,7 +322,7 @@ def main_process():
             else:
                 speak("sorry,this contact is not in your list.")
 
-        elif "whatsapp" in request: 
+        elif "Whatsapp" in request.lower(): 
             
             print("who do you want to call on whatsApp?")
             speak("who do you want to call on whatsApp?")
@@ -372,8 +367,16 @@ def main_process():
 main_process()
 
 
+# A green military air defense system vehicle mounted on a raised, circular stone platform with the label 'S-400' displayed prominently on the base. The setting is a modern courtyard with paved walkways, lush greenery, and white, multi-story buildings in the background. A man in a light-patterned shirt observes the display from the foreground, adding a sense of scale. The scene is lit with soft natural lighting, creating a calm and neutral color palette dominated by greens, browns, and whites."
+
+# A breathtaking landscape featuring a calm lake reflecting a snow-capped mountain in the background. The sky is painted in vibrant purple and pink sunset hues. In the foreground, blooming purple wildflowers grow near the rocky shore of the lake. Lush green grass surrounds the area, and dense trees form a dark silhouette at the base of the mountain. The overall atmosphere is peaceful and serene, with a dreamy and colorful twilight sky.
+
+# A highly detailed, realistic and slightly cartoonish teddy bear with brown fur, holding an AK-47 assault rifle in one hand and a large smoking cigar in its mouth. The teddy bear has an intense, gangster-like facial expression. It is standing confidently on a playground with colorful slides and equipment in the blurred background. The lighting is bright daylight, and the atmosphere is a mix of playful and edgy. Stylized like a Pixar-meets-action-movie scene.
+
 # ab inko kaise karna test.py hai naam ki file hai 
 #us ke through check karo apni screen resolution whatsapp ka 
 
 
 #Rainy night in a busy city with wet streets reflecting neon lights, high-rise buildings, glowing windows, and moody stormy clouds in the sky. East Asian signs and moving cars add urban vibrancy.
+
+#"Modern personal finance app UI with dashboard, charts, budget tracker, and clean light theme."
